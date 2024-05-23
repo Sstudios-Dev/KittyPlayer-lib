@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KittyPlayer</title>
+    <link rel="stylesheet" href="/src/components/example/html-example.css">
+    <link rel="stylesheet" href="/src/components/video/playVideo.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <!-- Add sidebar content here (e.g., navigation links, recommended videos) -->
+        </div>
+        <div class="content">
+            <div class="video-container" id="videoContainer">
+                <video class="video" id="video" src="/assets/visual-video-test.mp4"></video>
+                <div class="pause-icon" id="pauseIcon">&#10074;&#10074;</div>
+                <div class="controls" id="controls">
+                    <button class="btn" id="playPause">Play</button>
+                    <input type="range" id="progress" class="progress" min="0" max="100" value="0">
+                    <div class="time" id="time">00:00 / 00:00</div>
+                    <button class="btn" id="volumeDown">-</button>
+                    <span id="volumeIcon">&#128266;</span>
+                    <button class="btn" id="volumeUp">+</button>
+                    <button class="btn" id="fullscreen">
+                        <img src="/src/icons/fullscreen-icon.svg" class="icon" alt="Fullscreen">
+                    </button>
+                </div>
+            </div>            
+            <div class="video-details">
+                <div class="video-title">4k nature video (Test video)</div>
+                <div class="video-info">
+                    <span>100M views • 2 years ago</span>
+                    <a href="https://github.com/Sstudios-Dev/KittyPlayer-lib" class="subscribe-btn">Suscribirse</a>
+                </div>
+            </div>
+            <div class="comments">
+                <div class="comment">
+                    <div class="comment-header">
+                        <span><strong>KittyPlayer-lib</strong> 2 days ago (edited)</span>
+                        <span>1.2k likes</span>
+                    </div>
+                    <div class="comment-body">
+                        This video features the modern editor<br>
+                        from the kittyPlayer library I hope you like it.
+                        <br>
+                        <br>
+                        Github: <a href="https://github.com/Sstudios-Dev/KittyPlayer-lib">https://github.com/Sstudios-Dev/KittyPlayer-lib</a>
+                        <br>
+                        Website: <a href="https://sstudiosdev.is-a.dev/">https://sstudiosdev.is-a.dev/</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/src/scripts/js/PlayVideo-Script.js"></script>
+</body>
+</html>
