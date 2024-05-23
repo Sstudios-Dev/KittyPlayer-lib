@@ -1,0 +1,24 @@
+{
+  "name": "kittyplayer",
+  "version": "0.0.1",
+  "description": "📦 Browser video player library",
+  "main": "src/scripts/js/PlayVideo-Script.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sstudios-Dev/KittyPlayer-lib.git"
+ },
+ "keywords": [
+  "Css",
+  "Browser library"
+ ],
+ "author": {
+  "name": "SstudiosDev",
+  "email": "sstudiosdev@gmail.com",
+  "url": "https://sstudiosdev.is-a.dev/"
+ },
+ "license": "MIT",
+ "bugs": {
+  "url": "https://discord.gg/NbMhtfsgr6"
+ },
+ "homepage": "https://sstudiosdev.is-a.dev/"
+}
