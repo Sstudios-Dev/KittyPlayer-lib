@@ -1,6 +1,6 @@
 {
   "name": "kittyplayer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "📦 Browser video player library",
   "main": "src/scripts/js/PlayVideo-Script.js",
   "repository": {

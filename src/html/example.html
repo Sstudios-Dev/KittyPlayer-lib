@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KittyPlayer</title>
     <link rel="stylesheet" href="/src/components/example/html-example.css">
     <link rel="stylesheet" href="/src/components/video/playVideo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -15,19 +16,23 @@
         <div class="content">
             <div class="video-container" id="videoContainer">
                 <video class="video" id="video" src="/assets/visual-video-test.mp4"></video>
+                <div class="seek-icon" id="seekIcon"></div>
                 <div class="pause-icon" id="pauseIcon">&#10074;&#10074;</div>
                 <div class="controls" id="controls">
-                    <button class="btn" id="playPause">Play</button>
+                    <button class="btn" id="playPause"><i class="fas fa-play"></i></button>
                     <input type="range" id="progress" class="progress" min="0" max="100" value="0">
                     <div class="time" id="time">00:00 / 00:00</div>
-                    <button class="btn" id="volumeDown">-</button>
-                    <span id="volumeIcon">&#128266;</span>
-                    <button class="btn" id="volumeUp">+</button>
+                    <div id="volumeContainer" class="volume-container">
+                        <input type="range" id="volume" class="volume-slider" min="0" max="1" step="0.01">
+                        <div id="volumeIcon" class="volume-icon">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                    </div>                                      
                     <button class="btn" id="fullscreen">
-                        <img src="/src/icons/fullscreen-icon.svg" class="icon" alt="Fullscreen">
+                        <i class="fas fa-expand"></i>
                     </button>
                 </div>
-            </div>            
+            </div>                       
             <div class="video-details">
                 <div class="video-title">4k nature video (Test video)</div>
                 <div class="video-info">

@@ -6,9 +6,9 @@ const pauseIcon = document.getElementById('pauseIcon');
 const fullscreenBtn = document.getElementById('fullscreen');
 const videoContainer = document.getElementById('videoContainer');
 const controls = document.getElementById('controls');
-const volumeUpBtn = document.getElementById('volumeUp');
-const volumeDownBtn = document.getElementById('volumeDown');
+const volumeSlider = document.getElementById('volume');
 const volumeIcon = document.getElementById('volumeIcon');
+const volumeContainer = document.getElementById('volumeContainer');
 
 playPauseBtn.addEventListener('click', togglePlayPause);
 video.addEventListener('click', togglePlayPause);
@@ -16,21 +16,65 @@ video.addEventListener('timeupdate', updateProgress);
 progress.addEventListener('input', setVideoProgress);
 fullscreenBtn.addEventListener('click', toggleFullscreen);
 videoContainer.addEventListener('mousemove', showControls);
-volumeUpBtn.addEventListener('click', increaseVolume);
-volumeDownBtn.addEventListener('click', decreaseVolume);
+volumeSlider.addEventListener('input', setVolume);
+volumeContainer.addEventListener('mouseenter', showVolumeSlider);
+volumeContainer.addEventListener('mouseleave', hideVolumeSlider);
 
 let hideControlsTimeout;
+let customAlert;
+
+video.addEventListener('contextmenu', function(event) {
+    event.preventDefault(); // Prevenir el menú contextual
+
+    const alertElement = document.createElement('div');
+    alertElement.className = 'alert';
+    alertElement.textContent = 'Right click not allowed';
+
+    document.body.appendChild(alertElement);
+
+    // Mostrar la alerta con la animación de entrada
+    alertElement.style.opacity = '1';
+    alertElement.style.display = 'block';
+    alertElement.style.animation = 'slideIn 0.5s forwards';
+
+    // Programar la ocultación de la alerta después de 2 segundos
+    setTimeout(() => {
+        alertElement.style.animation = 'slideOut 0.5s forwards';
+        setTimeout(() => {
+            document.body.removeChild(alertElement);
+        }, 500); // Eliminar la alerta después de la animación de salida
+    }, 2000); // Ocultar la alerta después de 2 segundos
+});
+
+
+function showVolumeSlider() {
+    volumeSlider.style.display = 'block';
+}
+
+function hideVolumeSlider() {
+    volumeSlider.style.display = 'none';
+}
+
+let lastToggleTime = 0;
+const toggleDelay = 500;
 
 function togglePlayPause() {
+    const now = Date.now();
+    if (now - lastToggleTime < toggleDelay) {
+        return;
+    }
+
     if (video.paused || video.ended) {
         video.play();
-        playPauseBtn.textContent = 'Pause';
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         pauseIcon.classList.remove('active');
     } else {
         video.pause();
-        playPauseBtn.textContent = 'Play';
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
         pauseIcon.classList.add('active');
     }
+
+    lastToggleTime = now;
 }
 
 function updateProgress() {
@@ -78,31 +122,25 @@ hideControlsTimeout = setTimeout(() => {
     controls.classList.add('hidden');
 }, 2000);
 
-function increaseVolume() {
-    if (video.volume < 1) {
-        video.volume = Math.min(1, video.volume + 0.1);
-        updateVolumeIcon();
-    }
-}
-
-function decreaseVolume() {
-    if (video.volume > 0) {
-        video.volume = Math.max(0, video.volume - 0.1);
-        updateVolumeIcon();
-    }
+function setVolume() {
+    video.volume = volumeSlider.value;
+    updateVolumeIcon();
 }
 
 function updateVolumeIcon() {
     if (video.volume === 0) {
-        volumeIcon.innerHTML = '&#128263;'; // Mute icon
+        volumeIcon.innerHTML = '<i class="fas fa-volume-mute"></i>';
     } else if (video.volume < 0.5) {
-        volumeIcon.innerHTML = '&#128265;'; // Volume down icon
+        volumeIcon.innerHTML = '<i class="fas fa-volume-down"></i>';
     } else {
-        volumeIcon.innerHTML = '&#128266;'; // Volume up icon
+        volumeIcon.innerHTML = '<i class="fas fa-volume-up"></i>';
     }
 }
 
 document.addEventListener('keydown', handleKeyPress);
+
+let lastSeekTime = 0;
+const seekDelay = 500;
 
 function handleKeyPress(event) {
     const arrowLeftKeyCode = 37;
@@ -125,10 +163,23 @@ function handleKeyPress(event) {
 }
 
 function animateSeek(targetTime) {
+    const now = Date.now();
+    if (now - lastSeekTime < seekDelay) {
+        return;
+    }
+
+    lastSeekTime = now;
+
     const start = video.currentTime;
     const end = targetTime;
     const duration = Math.abs(end - start);
     const startTime = performance.now();
+
+    const seekIconClass = end > start ? 'forward' : 'backward';
+    const seekIcon = document.getElementById('seekIcon');
+    seekIcon.innerHTML = `${end > start ? '>>' : '<<'} ${Math.abs(end - start)}s`;
+    seekIcon.classList.add(seekIconClass);
+    seekIcon.style.display = 'block';
 
     function update() {
         const elapsed = performance.now() - startTime;
@@ -136,8 +187,15 @@ function animateSeek(targetTime) {
         const easedProgress = easeOutQuart(progress);
         video.currentTime = start + (end - start) * easedProgress;
 
+        seekIcon.innerHTML = end > start ? '>>' : '<<';
+
         if (progress < 1) {
             requestAnimationFrame(update);
+        } else {
+            setTimeout(() => {
+                seekIcon.style.display = 'none';
+                seekIcon.classList.remove(seekIconClass);
+            }, 500);
         }
     }
 
@@ -147,74 +205,3 @@ function animateSeek(targetTime) {
 function easeOutQuart(x) {
     return 1 - Math.pow(1 - x, 4);
 }
-
-
-const videoInfo = document.createElement('div');
-videoInfo.id = 'videoInfo';
-videoInfo.classList.add('hidden');
-document.body.appendChild(videoInfo);
-
-const style = document.createElement('style');
-style.innerHTML = `
-    #videoInfo {
-        position: absolute;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        max-width: 300px;
-        font-family: Arial, sans-serif;
-    }
-    #videoInfo.hidden {
-        display: none;
-    }
-    #videoInfo strong {
-        display: block;
-        margin-bottom: 10px;
-        font-size: 16px;
-    }
-    #videoInfo p {
-        margin: 5px 0;
-    }
-    #videoInfo .section-title {
-        margin-top: 10px;
-        font-size: 14px;
-        text-decoration: underline;
-    }
-`;
-document.head.appendChild(style);
-
-function showVideoInfo(event) {
-    event.preventDefault();
-
-    const libraryName = "KittyPlayer Lib";
-    const developerName = "Developer: Sstudiosdev";
-
-    const currentTime = formatTime(video.currentTime);
-    const duration = formatTime(video.duration);
-    const volume = Math.round(video.volume * 100);
-    const isPaused = video.paused ? 'Yes' : 'No';
-
-    videoInfo.innerHTML = `
-        <strong>Video Player information</strong>
-        <p>${libraryName}</p>
-        <p>${developerName}</p>
-        <div class="section-title">Video Information</div>
-        <p><strong>Current Time:</strong> ${currentTime}</p>
-        <p><strong>Duration:</strong> ${duration}</p>
-        <p><strong>Volume:</strong> ${volume}%</p>
-        <p><strong>Paused:</strong> ${isPaused}</p>
-    `;
-
-    videoInfo.style.top = `${event.clientY}px`;
-    videoInfo.style.left = `${event.clientX}px`;
-    videoInfo.classList.remove('hidden');
-}
-
-video.addEventListener('contextmenu', showVideoInfo);
-
-document.addEventListener('click', () => {
-    videoInfo.classList.add('hidden');
-});
