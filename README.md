@@ -18,6 +18,14 @@ To use KittyPlayer-lib, first ensure you include the library in your project. Th
 
 These two files must always be imported so that the library works 100% and does not fail.
 
+### Dependencies
+
+at the moment the library has only one dependency for it to work correctly, which is the icon dependency.
+
+```html
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+```
+
 # Components
 
 KittyPlayer-lib includes a variety of components for customizing and enhancing the video playback experience, such as customizable controls, play buttons, progress bars, and more:
